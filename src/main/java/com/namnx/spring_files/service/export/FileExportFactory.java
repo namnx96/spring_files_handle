@@ -1,30 +1,31 @@
 package com.namnx.spring_files.service.export;
 
+import com.namnx.spring_files.enums.TypeFile;
 import com.namnx.spring_files.service.export.processor.CSVExportProcessor;
 import com.namnx.spring_files.service.export.processor.ExcelExportProcessor;
 import com.namnx.spring_files.service.export.processor.FileExportProcessor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.EnumMap;
 import java.util.Map;
 
-@Service
+@Component
 public class FileExportFactory {
 
-    private final Map<TypeFileExport, FileExportProcessor<?>> exportProcessors = new EnumMap<>(TypeFileExport.class);
+    private final Map<TypeFile, FileExportProcessor<?>> exportProcessors = new EnumMap<>(TypeFile.class);
 
-    public <T> FileExportProcessor<T> createExportProcessor(TypeFileExport typeFileExport) {
+    public <T> FileExportProcessor<T> createExportProcessor(TypeFile typeFileExport) {
         FileExportProcessor fileExportProcessor = exportProcessors.get(typeFileExport);
         if (fileExportProcessor == null) {
-            if (typeFileExport == TypeFileExport.CSV) {
+            if (typeFileExport == TypeFile.CSV) {
                 fileExportProcessor = new CSVExportProcessor<>();
-                exportProcessors.put(TypeFileExport.CSV, fileExportProcessor);
+                exportProcessors.put(TypeFile.CSV, fileExportProcessor);
 
-            } else if (typeFileExport == TypeFileExport.EXCEL) {
+            } else if (typeFileExport == TypeFile.EXCEL) {
                 fileExportProcessor = new ExcelExportProcessor<>();
-                exportProcessors.put(TypeFileExport.EXCEL, fileExportProcessor);
+                exportProcessors.put(TypeFile.EXCEL, fileExportProcessor);
             } else {
-                throw new IllegalArgumentException("Invalid typeFileImport: " + typeFileExport);
+                throw new IllegalArgumentException("Invalid typeFileExport: " + typeFileExport);
             }
         }
         return fileExportProcessor;
